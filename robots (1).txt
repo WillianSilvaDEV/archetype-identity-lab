@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+Disallow: /obrigado.html
+Disallow: /admin.html
+
+Sitemap: https://cristianooliveira.com.br/sitemap.xml
