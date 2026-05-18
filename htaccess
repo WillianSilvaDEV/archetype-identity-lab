@@ -1,0 +1,61 @@
+# =========================================================================
+# Apache .htaccess — Hostinger
+# =========================================================================
+
+# Forçar HTTPS
+RewriteEngine On
+RewriteCond %{HTTPS} off
+RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+# Página inicial
+DirectoryIndex index.html
+
+# 404 — redireciona para a home
+ErrorDocument 404 /index.html
+
+# =========================================================================
+# Cache
+# =========================================================================
+<IfModule mod_expires.c>
+  ExpiresActive On
+  ExpiresDefault                              "access plus 1 month"
+
+  # HTML — sempre revalidar
+  ExpiresByType text/html                     "access plus 0 seconds"
+
+  # CSS, JS — 1 semana
+  ExpiresByType text/css                      "access plus 1 week"
+  ExpiresByType application/javascript        "access plus 1 week"
+
+  # Imagens — 1 ano
+  ExpiresByType image/jpeg                    "access plus 1 year"
+  ExpiresByType image/png                     "access plus 1 year"
+  ExpiresByType image/webp                    "access plus 1 year"
+  ExpiresByType image/svg+xml                 "access plus 1 year"
+
+  # Fontes
+  ExpiresByType font/woff2                    "access plus 1 year"
+</IfModule>
+
+# Compressão Gzip
+<IfModule mod_deflate.c>
+  AddOutputFilterByType DEFLATE text/html text/css text/javascript application/javascript text/xml application/xml image/svg+xml
+</IfModule>
+
+# =========================================================================
+# Cabeçalhos de segurança
+# =========================================================================
+<IfModule mod_headers.c>
+  Header set X-Content-Type-Options "nosniff"
+  Header set X-Frame-Options "SAMEORIGIN"
+  Header set Referrer-Policy "strict-origin-when-cross-origin"
+  Header set Permissions-Policy "camera=(), microphone=(), geolocation=()"
+  Header set Strict-Transport-Security "max-age=31536000; includeSubDomains" env=HTTPS
+</IfModule>
+
+# =========================================================================
+# Bloqueia acesso a arquivos sensíveis
+# =========================================================================
+<FilesMatch "(^\.|\.md$|\.yml$|\.lock$|\.json$|\.example$)">
+  Require all denied
+</FilesMatch>
